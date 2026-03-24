@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 // 백엔드 API 주소 (5001번 포트 확인!)
-const API_URL = 'http://localhost:5001/api/todos';
+const API_URL = '/api/todos';
 
 function App() {
   const [todos, setTodos] = useState([]);

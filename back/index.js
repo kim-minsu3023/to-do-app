@@ -7,7 +7,7 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Middleware - 순서: CORS 먼저, JSON 해석 다음
+// Middleware
 app.use(cors()); 
 app.use(express.json());
 
@@ -46,21 +46,19 @@ app.post('/api/todos', async (req, res) => {
   }
 });
 
-// ⭐ [PUT] 수정 (상태 변경 및 제목 수정 통합)
+// [PUT] 수정 (상태 변경 및 제목 수정 통합)
 app.put('/api/todos/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, completed } = req.body; // 👈 title을 받을 수 있도록 추가했습니다!
+    const { title, completed } = req.body;
 
     const todo = await Todo.findByIdAndUpdate(
       id,
-      { title, completed }, // 👈 title과 completed 중 들어오는 값을 모두 업데이트합니다.
+      { title, completed },
       { new: true }
     );
 
-    if (!todo) {
-      return res.status(404).json({ error: 'Todo를 찾을 수 없습니다.' });
-    }
+    if (!todo) return res.status(404).json({ error: 'Todo를 찾을 수 없습니다.' });
     res.json(todo);
   } catch (err) {
     res.status(400).json({ error: 'Todo 수정 실패' });
@@ -72,16 +70,19 @@ app.delete('/api/todos/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const todo = await Todo.findByIdAndDelete(id);
-    if (!todo) {
-      return res.status(404).json({ error: 'Todo를 찾을 수 없습니다.' });
-    }
+    if (!todo) return res.status(404).json({ error: 'Todo를 찾을 수 없습니다.' });
     res.json({ message: 'Todo가 삭제되었습니다.' });
   } catch (err) {
     res.status(400).json({ error: 'Todo 삭제 실패' });
   }
 });
 
-// 서버 시작
-app.listen(PORT, () => {
-  console.log(`서버가 포트 ${PORT}번에서 실행 중입니다.`);
-});
+// ⭐ 이 부분이 핵심 수정 사항입니다! ⭐
+// 로컬 환경에서만 서버를 켜고, Vercel 배포 시에는 app 자체를 내보냅니다.
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`로컬 서버 실행 중: http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app; // Vercel이 이 app 객체를 가져가서 함수로 실행합니다.
