@@ -12,22 +12,10 @@
       }
     ],
     "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "back/index.js"
-      },
-      {
-        "src": "/assets/(.*)",
-        "dest": "frontend/dist/assets/$1"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "frontend/dist/$1",
-        "check": true
-      },
-      {
-        "src": "/(.*)",
-        "dest": "frontend/index.html"
-      }
+      { "src": "/api/(.*)", "dest": "back/index.js" },
+      { "src": "/assets/(.*)", "dest": "frontend/dist/assets/$1" },
+      { "src": "/index-(.*)\\.(js|css)", "dest": "frontend/dist/assets/index-$1.$2" },
+      { "src": "/(.*\\.(js|css|png|jpg|svg|ico))$", "dest": "frontend/dist/$1", "check": true },
+      { "src": "/(.*)", "dest": "frontend/dist/index.html" }
     ]
   }
