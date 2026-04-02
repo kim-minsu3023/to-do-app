@@ -1,5 +1,3 @@
-// ⭐ 예시 1: App.jsx (Cyberpunk 스타일)
-// 통째로 복사해서 붙여넣으세요.
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -79,7 +77,11 @@ function App() {
     try {
       const response = await axios.get(API_URL);
       setTodos(Array.isArray(response.data) ? response.data : []);
-    } catch (err) { console.error(err); } finally { setLoading(false); }
+    } catch (err) { 
+      console.error(err); 
+    } finally { 
+      setLoading(false); 
+    }
   };
 
   const addTodo = async (e) => {
@@ -90,7 +92,7 @@ function App() {
         title: newTodo, deadline, startDate: selectedDate 
       });
       setTodos([...todos, response.data]);
-      setNewTodo(''); setNewDeadline('');
+      setNewTodo(''); setDeadline('');
     } catch (err) { console.error(err); }
   };
 
@@ -123,15 +125,14 @@ function App() {
     } catch (err) { console.error(err); }
   };
 
-  if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-cyan-200 text-2xl font-mono animate-pulse">🐾 시간 여행 중...</div>;
-
+  
   return (
     <div className="min-h-screen bg-black text-cyan-100 p-4 md:p-8 font-sans" style={{ backgroundImage: 'linear-gradient(rgba(17, 24, 39, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(17, 24, 39, 0.1) 1px, transparent 1px)', backgroundSize: '20px 20px' }}>
       <div className="max-w-4xl mx-auto">
         <header className="mb-10 bg-slate-950/70 p-8 rounded-xl border border-cyan-800 shadow-[0_0_30px_rgba(34,211,238,0.3)]">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-6">
-              <button onClick={() => changeDate(-1)} className="p-3 text-cyan-400 hover:text-pink-400">▶</button>
+              <button onClick={() => changeDate(-1)} className="p-3 text-cyan-400 hover:text-pink-400">◀</button>
               <div className="text-center md:text-left">
                 <div className="text-3xl font-black text-cyan-100 drop-shadow-[0_0_8px_#22d3ee]">{selectedDate.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}</div>
                 <div className="text-cyan-600 uppercase tracking-widest text-xs font-mono">{selectedDate.toLocaleDateString('ko-KR', { weekday: 'long' })}</div>
@@ -171,7 +172,9 @@ function App() {
         </form>
 
         <div className="space-y-4">
-          {sortedTodos.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-20 text-cyan-600 font-mono text-sm animate-pulse">Syncing with database...</div>
+          ) : sortedTodos.length === 0 ? (
             <div className="text-center py-20 text-cyan-800 border-2 border-dashed border-cyan-900 rounded-3xl font-mono text-sm animate-pulse">이 날은 깨끗한 하루네요! ✨</div>
           ) : (
             sortedTodos.map((todo) => {

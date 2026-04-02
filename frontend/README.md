@@ -1,91 +1,71 @@
-# To-do List — Frontend
+Full-Stack Todo Engine (React + Vite)
+소프트웨어 공학 프로세스 기반의 데이터 중심 할 일 관리 시스템
+본 프로젝트는 창원대학교 컴퓨터공학과 2학년 전공 미니 프로젝트로, 프론트엔드와 백엔드, 클라우드 DB를 통합한 Full-Stack 환경을 구축하고 배포하는 것을 목표로 합니다.
 
-React + Vite 기반 할 일 관리 앱 프론트엔드입니다. 백엔드 API와 연동해 할 일을 조회·추가·수정·삭제합니다.
+Tech Stack
 
-## 기술 스택
+    Frontend
+        Framework: React 19 (Vite 8)
+        Styling: Tailwind CSS v4 (PostCSS, Autoprefixer)
+        HTTP Client: Axios (REST API Communication)
 
-- **React** 19, **Vite** 8
-- **Tailwind CSS** v4 (`@tailwindcss/postcss`, PostCSS, Autoprefixer)
-- **Axios** (HTTP 클라이언트)
-- **ESLint** (코드 스타일)
+    Backend & Database  
+        Server: Node.js (Express)
+        Database: MongoDB Atlas (Mongoose ODM)
+        Deployment: Vercel (Serverless Functions)
 
-## 사전 요구 사항
+1. 핵심 기능 (Core Features)
+    REST API 기반의 정교한 CRUD
+        Create: 실시간 데이터 동기화를 통한 할 일 추가.
+        Read: MongoDB 쿼리를 활용한 상태별/날짜별 데이터 조회.
+        Update: 인라인 편집 모드를 지원하여 UI 이탈 없이 즉시 수정 가능.    
+        Delete: 고유 ID 기반의 데이터 영구 삭제 및 상태 업데이트.
 
-- Node.js 20 이상 권장
-- npm (또는 pnpm, yarn)
+2.  마감 기한(Deadline) 관리 시스템
+        실시간 잔여 시간 계산: 현재 시각과 마감 시각을 비교하여 사용자에게 남은 시간을 시각적으로 제공.
+        임박 알림 UI: 마감 1시간 이내 항목에 대해 애니메이션 효과와 강조 색상을 적용하여 가독성 증대.
+        Time-Over 로직: 마감 기한이 지난 항목은 자동으로 '실패' 상태로 전환 및 체크박스 비활성화 처리.
 
-## 설치
+3. 성취도 분석 (Win Rate) 대시보드
+        데이터 시각화: 당일 완료(Success) 건수와 실패(Failure) 건수를 실시간 합산하여 승률(%) 산출.
 
-```bash
-cd frontend
-npm install
-```
+4. 사용자 맞춤형 데이터 필터링
+        날짜별 독립 관리: 캘린더 피커를 통해 과거와 미래 날짜를 선택하여 날짜별 독립된 Todo 리스트 관리 가능.
+        중요도(Importance): 별표(Favorite) 표시 기능을 통해 핵심 업무를 상단에 고정하고 우선순위 정렬.
 
-## 로컬 개발
+Installation & Running
 
-백엔드(`to-do-list/back`)를 먼저 실행한 뒤 프론트를 띄우는 것을 권장합니다.
+    1. Prerequisites
+        Node.js v20.0.0+
+        MongoDB Atlas URI
+ 
+    2. Local Setup
+    # 1. 저장소 클론
+        git clone https://github.com/kim-minsu3023/to-do-app.git
 
-```bash
-# 터미널 1 — 백엔드 (예: 포트 5000)
-cd ../back
-npm install
-npm run dev
-```
+    # 2. 프론트엔드 실행
+        cd frontend
+        npm install
+        npm run dev
 
-```bash
-# 터미널 2 — 프론트 (기본 http://localhost:5173)
-cd frontend
-npm run dev
-```
+    # 3. 백엔드 실행 (별도 터미널)
+        cd backend
+        npm install
+        npm run dev # Port 5001 사용 (macOS 포트 충돌 방지)
 
-### API 주소
 
-- **프로덕션(Vercel 등)**: `App.jsx`의 `API_URL`이 `/api/todos`로 설정되어 있으면, 같은 도메인의 API로 요청이 갑니다.
-- **로컬에서 백엔드만 따로 띄울 때**: Vite 프록시를 쓰거나 `API_URL`을 `http://localhost:5000/api/todos`처럼 백엔드 URL로 바꿔야 합니다. (CORS는 백엔드에서 `cors()`로 허용되어 있어야 합니다.)
+Project Structure
+        todo-app/
+            ├── frontend/             # React Client
+            │   ├── src/
+            │   │   ├── App.jsx       # Main Logic & UI
+            │   │   └── assets/       # Static Resources (Logo, etc.)
+            │   └── vite.config.js    # Build & Proxy Setup
+            ├── backend/              # Express Server
+            │   └── index.js          # API Endpoints & DB Connection
+            └── vercel.json           # Deployment Configuration
 
-## 빌드
 
-```bash
-npm run build
-```
-
-결과물은 `frontend/dist`에 생성됩니다.
-
-```bash
-npm run preview
-```
-
-로 프로덕션 빌드를 로컬에서 미리 볼 수 있습니다.
-
-## 기타 스크립트
-
-| 명령 | 설명 |
-|------|------|
-| `npm run dev` | 개발 서버 (HMR) |
-| `npm run build` | 프로덕션 빌드 |
-| `npm run preview` | 빌드 결과 미리보기 |
-| `npm run lint` | ESLint 검사 |
-
-## 전체 프로젝트 배포 (참고)
-
-저장소 루트의 `to-do-list/`에 `vercel.json`이 있으면, 프론트 정적 빌드와 백엔드 서버리스를 함께 묶을 수 있습니다. 배포 시 **Root Directory**를 `to-do-list`로 두고, Vercel 대시보드에서 프론트용 **Build Command**가 `cd frontend && npm install && npm run build`, **Output Directory**가 `frontend/dist`인지 확인하세요. (설정이 다르면 경로를 찾지 못하는 오류가 날 수 있습니다.)
-
-## 폴더 구조 (요약)
-
-```
-frontend/
-├── index.html
-├── vite.config.js
-├── postcss.config.js
-├── tailwind.config.js
-├── src/
-│   ├── main.jsx
-│   ├── App.jsx
-│   ├── index.css
-│   └── ...
-└── public/
-```
-
-## 라이선스
-
-개인 미니 프로젝트 용도입니다.
+Developer
+    Minsu Kim (Changwon National University / Computer Engineering)
+    Email: 20262407@student.changwon.ac.kr  
